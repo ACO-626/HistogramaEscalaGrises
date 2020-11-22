@@ -45,10 +45,52 @@ namespace HistogramaEscalaGrises
         {
             if (MyImage!=null)
             {
-                
+                GrayImage = MyImage.Convert<Gray, byte>();
+                imageBox2.Image = GrayImage;
             }else
             {
                 MessageBox.Show("Debe importar una imagen");
+            }
+        }
+
+        //Botón de histograma color
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (MyImage != null)
+            {
+                //Hace que no se juntenn los histogramas de diferentes imagenes
+                colorHistrogram.ClearHistogram();
+                //Crea un rango de histograma
+                DenseHistogram hist = new DenseHistogram(256, new RangeF(0, 255));
+                hist.Calculate(new Image<Gray, byte>[] { MyImage[0] }, false, null);
+                Mat m = new Mat();
+                hist.CopyTo(m);
+                colorHistrogram.AddHistogram("Canal azul de histograma", Color.Blue, m, 256, new float[] { 0, 256 });
+                colorHistrogram.Refresh();
+            }
+            else
+            {
+                MessageBox.Show("Debe importar una imagen");
+            }
+        }
+
+        //Botón de histograma gris
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (GrayImage != null)
+            {
+                //Hace que no se juntenn los histogramas de diferentes imagenes
+                grayHistograma.ClearHistogram();
+                DenseHistogram hist = new DenseHistogram(256, new RangeF(0, 255));
+                hist.Calculate(new Image<Gray, byte>[] { GrayImage }, false, null);
+                Mat m = new Mat();
+                hist.CopyTo(m);
+                grayHistograma.AddHistogram("Canal gris de histograma", Color.Blue, m, 256, new float[] { 0, 256 });
+                grayHistograma.Refresh();
+            }
+            else
+            {
+                MessageBox.Show("Debe transformar a escala de grises");
             }
         }
     }
